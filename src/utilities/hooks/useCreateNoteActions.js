@@ -1,6 +1,7 @@
 import { useState } from "react";
 export function useCreateNoteActions(resetForm) {
   const [addnote, setAddNote] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   function addNote(event) {
     event.preventDefault();
@@ -9,14 +10,11 @@ export function useCreateNoteActions(resetForm) {
 
   function closeNote(event) {
     event.preventDefault();
+    setIsEditing(false)
     resetForm();
     setAddNote(false);
   }
   
-  function deleteNote(event) {
-    event.preventDefault();
-    setAddNote(false);
-  }
 
-  return { addNote, closeNote, addnote };
+  return { isEditing, setIsEditing, setAddNote, addNote, closeNote, addnote };
 }

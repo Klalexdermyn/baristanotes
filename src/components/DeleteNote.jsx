@@ -1,7 +1,6 @@
 export function DeleteNote({deleteNote, noteKey}) {
 const handleClick = (e) => {
   e.preventDefault();
-  // Call the function passed from the parent component
   deleteNote(noteKey);
 };
   return (
