@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Note } from "./components/Note";
 import { CreateNote } from "./components/CreateNote";
 import { AddNote } from "./components/AddNote";
-import { recipeValidationSchema } from "./Validations/recipeValidation";
 import { v4 as uuid } from "uuid";
-import { useFormik } from "formik";
 import { useCreateNoteActions } from "./utilities/hooks/useCreateNoteActions";
-import { inputFormat } from "./utilities/inputFormat";
+import { useRecipeForm } from "./utilities/hooks/useRecipeFrom";
 
 function App() {
+
   const onSubmit = (value) => {
     let formData = {
       name: value.name,
@@ -23,6 +22,15 @@ function App() {
     resetForm();
   };
 
+  const initialValue = {
+    name: "",
+    weight: "",
+    extraction: "",
+    preassure: "",
+    grinding: "",
+    description: "",
+  };
+
   const {
     values,
     errors,
@@ -31,71 +39,30 @@ function App() {
     handleChange,
     handleSubmit,
     resetForm,
-    setFieldValue,
-  } = useFormik({
-    initialValues: {
-      name: "",
-      weight: "",
-      extraction: "",
-      preassure: "",
-      grinding: "",
-      description: "",
-    },
-    validationSchema: recipeValidationSchema,
-    onSubmit,
-  });
-  const [recipes, setRecipe] = useState([
-    {
-      name: "Mexico Chiapas",
-      weight: "16,7",
-      extraction: "27sec",
-      preassure: "8-9b",
-      grinding: "5",
-      description:
-        "very sour, not bitter, slight taste of mexican monkey's ass",
-    },
-    {
-      name: "El Polo Locco",
-      weight: "16,7",
-      extraction: "27sec",
-      preassure: "8-9b",
-      grinding: "5",
-      description: "nice",
-    },
-    {
-      name: "Nestle 3 in 1",
-      weight: "15",
-      extraction: "5sec",
-      preassure: "1b",
-      grinding: "9999",
-      description: "belissimo",
-    },
-  ]);
-  const { addNote, closeNote, addnote } = useCreateNoteActions(resetForm);
-  const handleNumbersInputChange = (fieldName) => (event) => {
-    const { value } = event.target;
-    const sanitizedValue = inputFormat(value);
-    setFieldValue(fieldName, sanitizedValue);
-  };
-  const deleteNote = (noteKey) => {
-    console.log(noteKey);
+    recipes,
+    setRecipe,
+    handleNumbersInputChange,
+    deleteNote,
+    setValues,
+  } = useRecipeForm(initialValue, onSubmit);
+  const {isEditing, setIsEditing, setAddNote, addNote, closeNote, addnote } = useCreateNoteActions(resetForm);
+
+  const editNote = (noteKey) => {
     const index = recipes.findIndex((recipe) => recipe.key === noteKey);
     if (index !== -1) {
-      // Remove the item from the array
-      recipes.splice(index, 1);
-      setRecipe([...recipes]);
-      window.localStorage.setItem("MY_APP_STATE", JSON.stringify(recipes));
-      console.log(index);
+      setValues(recipes[index]);
+      // setPreviousValues((prevValue) => ({ ...prevValue, ...recipes[index] }));
+      setIsEditing(true);
+      setAddNote(true);
     }
   };
 
   useEffect(() => {
     const data = window.localStorage.getItem("MY_APP_STATE");
-    console.log(data);
     if (data !== null) {
       setRecipe(JSON.parse(data));
     }
-  }, []);
+  }, [setRecipe]);
   useEffect(() => {
     window.localStorage.setItem("MY_APP_STATE", JSON.stringify(recipes));
   }, [recipes]);
@@ -104,7 +71,20 @@ function App() {
     <>
       <link rel="stylesheet" href="https://rsms.me/inter/inter.css"></link>
       {!addnote ? <AddNote addNote={addNote} /> : ""}
-      {addnote && (
+      {addnote && !isEditing &&(
+        <CreateNote
+          handleBlur={handleBlur}
+          touched={touched}
+          errors={errors}
+          values={values}
+          handleNumbersInputChange={handleNumbersInputChange}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          closeNote={closeNote}
+          nameChange={handleChange}
+        />
+      )}
+      {isEditing && (
         <CreateNote
           handleBlur={handleBlur}
           touched={touched}
@@ -123,6 +103,7 @@ function App() {
           key={recipe.key}
           noteKey={recipe.key}
           deleteNote={deleteNote}
+          editNote={editNote}
         />
       ))}
     </>
