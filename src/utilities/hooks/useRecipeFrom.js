@@ -5,8 +5,7 @@ import { recipeValidationSchema } from "../../Validations/recipeValidation";
 
 export function useRecipeForm(initialValues, onSubmit) {
   const [recipes, setRecipe] = useState([]);
-
-  console.log(initialValues);
+  const [index, setIndex] = useState([]);
   const {
     values,
     errors,
@@ -27,7 +26,6 @@ export function useRecipeForm(initialValues, onSubmit) {
     const { value } = event.target;
     const sanitizedValue = inputFormat(value);
     setFieldValue(fieldName, sanitizedValue);
-    // console.log(initialValues);
   };
 
   const deleteNote = (noteKey) => {
@@ -52,5 +50,7 @@ export function useRecipeForm(initialValues, onSubmit) {
     handleNumbersInputChange,
     deleteNote,
     setValues,
+    index,
+    setIndex,
   };
 }

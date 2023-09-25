@@ -2,8 +2,9 @@
 
 export function AddNote({ addNote }) {
   return (
-    <button className="flex flex-col justify-center mx-auto" onClick={addNote}>
-      <svg
+    <button className="block mx-auto rounded bg-slate-100  hover:bg-slate-300  uppercase text-lg p-4" onClick={addNote}>
+      Create note
+      {/* <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -16,7 +17,7 @@ export function AddNote({ addNote }) {
           stroke-linejoin="round"
           d="M12 4.5v15m7.5-7.5h-15"
         />
-      </svg>
+      </svg> */}
     </button>
   );
 }
