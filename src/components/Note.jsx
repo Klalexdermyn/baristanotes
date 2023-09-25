@@ -1,12 +1,37 @@
 import "./styleNote.css";
 import { DeleteNote } from "./DeleteNote";
 import { EditButton } from "./EditButton";
+import { CreateNote } from "./CreateNote";
 
 export function Note(props) {
   const { name, weight, extraction, preassure, grinding, description } =
     props.recipe;
-  const { noteKey, deleteNote, editNote } = props;
-  return (
+  const {
+    noteKey,
+    deleteNote,
+    editNote,
+    handleNumbersInputChange,
+    handleChange,
+    handleSubmit,
+    handleBlur,
+    closeNote,
+    values,
+    touched,
+    errors,
+    isEditing,
+  } = props;
+  return isEditing ? (
+    <CreateNote
+      handleNumbersInputChange={handleNumbersInputChange}
+      handleChange={handleChange}
+      handleSubmit={handleSubmit}
+      handleBlur={handleBlur}
+      closeNote={closeNote}
+      values={values}
+      touched={touched}
+      errors={errors}
+    />
+  ) : (
     <div>
       <div className="note flex flex-col justify-center mx-auto my-6 max-w-lg rounded border border-neutral-100/50 p-8">
         <div className="px-4 sm:px-0">
@@ -31,7 +56,7 @@ export function Note(props) {
               <dt className="text-sm font-medium leading-6 text-gray-900">
                 Extraction:
               </dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 ">
                 {extraction}
               </dd>
             </div>
@@ -55,7 +80,7 @@ export function Note(props) {
         </div>
         <div className="flex flex-row-reverse">
           <DeleteNote deleteNote={deleteNote} noteKey={noteKey} />
-          <EditButton  noteKey={noteKey} editNote={editNote}/>
+          <EditButton noteKey={noteKey} editNote={editNote} />
         </div>
       </div>
     </div>

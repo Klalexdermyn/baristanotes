@@ -1,5 +1,4 @@
 export function inputFormat(inputValue) {
-  console.log(inputValue);
   if (inputValue) {
     inputValue = inputValue.toString();
     inputValue = inputValue.replace(/[^0-9.]/g, "");
